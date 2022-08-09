@@ -29,7 +29,6 @@ const processFile = ((req, res) => {
 
         var longDateFormat  = 'DD/MM/yyyy';
         var hourFormat  = 'HH:mm:ss';
-        var isIP = true;
         var arrayUniqueIPAddress = [];
         var arrayIPAddress = [];
         var arrayIPDate = [];
@@ -42,21 +41,24 @@ const processFile = ((req, res) => {
         //#############################################################################################################
         //LÊ E SEPARA TODOS OS IP'S E DATAS RETORNADAS PELO FACEBOOK EM DUAS ARRAYS SEPARADAS
         //#############################################################################################################
-        console.log('Lendo e tratando arquivo "facebook-response.html"...');
+        console.log('Lendo e tratando arquivo HTML...');
         
-        $("td td", $("th:contains('Ip Addresses')").parent()).each(function( index ) {
-            if(isIP) {            
-                arrayIPAddress.push($(this).text());
-                isIP = false;
-            } else {
-                arrayIPDate.push(new Date($(this).text()));
-                isIP = true;
-            }   
+        $("th:contains('IP Address')").each(function( index ) {
+            arrayIPAddress.push($("td", $(this).parent()).text());
         });
+
+        $("th:contains('Time')").each(function( index ) {
+            arrayIPDate.push(new Date($("td", $(this).parent()).text()));
+        });
+
+        if(arrayIPDate.length == 0 || arrayIPAddress.length == 0) {
+            throw "Não foram encontrados IP's e/ou datas a serem tratados.";
+        }
 
         //#############################################################################################################
         //TRATA TODAS AS DATAS PARA O FORMATO GMT-3
         //#############################################################################################################
+          
         console.log('Convertendo datas para o padrão brasileiro...');
 
         $.each(arrayIPDate, function( index, value ){
@@ -179,7 +181,9 @@ const processFile = ((req, res) => {
         rq.pushAll(arrayRequests);
 
     } catch(err) {
-        res.status(403).send(err);
+        console.log(err);
+        res.status(500);
+        res.send(err);
     }
 })
 
