@@ -104,6 +104,7 @@ const processFile = ((req, res) => {
                 arrayUniqueIPAddress.push(IPAddressFormated);
             }			
         });
+		
 		console.log("Foram encontrados " + arrayUniqueIPAddress.length + " IP's únicos.");
 
         //#############################################################################################################
@@ -118,10 +119,13 @@ const processFile = ((req, res) => {
             }
             arrayRequests.push(request);
         });
-
+		
+		var count = 0;
         let rq = new RequestQueue(1);
         rq.on('resolved', res => {
-            console.log('Resultado consulta: ' + res);
+			count++;
+			var pct = Math.round(count/arrayUniqueIPAddress.length*100);
+            console.log('Resultado consulta (' + pct + '%): ' + res);
             arrayIPResult.push(res);
         }).on('rejected', err => {
             console.log('Ocorreu um erro ao buscar dados de um IP!');
