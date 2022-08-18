@@ -102,8 +102,9 @@ const processFile = ((req, res) => {
             arrayIPAddressFormated.push(IPAddressFormated);
             if(arrayUniqueIPAddress.indexOf(IPAddressFormated) == -1) {
                 arrayUniqueIPAddress.push(IPAddressFormated);
-            }
+            }			
         });
+		console.log("Foram encontrados " + arrayUniqueIPAddress.length + " IP's únicos.");
 
         //#############################################################################################################
         //CONSULTA AS ISPS DOS IPS
