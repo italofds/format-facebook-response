@@ -115,7 +115,8 @@ const processFile = ((req, res) => {
         $.each(arrayUniqueIPAddress, function( index, IPValue ){       
             let request = {
                 method: 'GET',
-                uri: 'https://ipwhois.app/json/'+ IPValue + '?objects=ip,country,region,city,isp&lang=pt-BR'
+                //uri: 'https://ipwhois.app/json/'+ IPValue + '?objects=ip,country,region,city,isp&lang=pt-BR'
+				uri: 'http://localhost:3000/'+ IPValue
             }
             arrayRequests.push(request);
         });
@@ -156,27 +157,27 @@ const processFile = ((req, res) => {
 
             $.each(arrayIPAddressFormated, function( index, value ){
                 var ipValue = value;
-                var isp = "";
+                var asn = "";
                 var country = "";
-                var region = "";
+                var regionName = "";
                 var city = "";            
 
                 for(var i=0; i<arrayIPResult.length; i++) {
                     var objResult = JSON.parse(arrayIPResult[i]);
 
                     if(ipValue == objResult.ip) {
-                        isp = objResult.isp;
+                        asn = objResult.asn;
                         country = objResult.country;
-                        region = objResult.region;
+                        regionName = objResult.regionName;
                         city = objResult.city;
                         break;
                     }
                 }
 
                 worksheet.cell(parseInt(index)+1,3).string(ipValue).style(style);
-                worksheet.cell(parseInt(index)+1,4).string(isp).style(style);
+                worksheet.cell(parseInt(index)+1,4).string(asn).style(style);
                 worksheet.cell(parseInt(index)+1,5).string(country).style(style);
-                worksheet.cell(parseInt(index)+1,6).string(region).style(style);
+                worksheet.cell(parseInt(index)+1,6).string(regionName).style(style);
                 worksheet.cell(parseInt(index)+1,7).string(city).style(style);
             });       
 
